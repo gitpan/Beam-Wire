@@ -8,4 +8,6 @@ dist.ini
 lib/Beam/Wire.pm
 t/00_compile.t
 t/file.yml
+t/subwire.t
+t/subwire.yml
 t/wire.t
