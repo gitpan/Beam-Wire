@@ -1,0 +1,23 @@
+---
+abstract: 'A Dependency Injection Container'
+author:
+  - 'Doug Bell <preaction@cpan.org>'
+build_requires:
+  Module::Build: 0.3601
+  Test::Compile: 0
+  Test::Most: 0
+configure_requires:
+  ExtUtils::MakeMaker: 6.30
+  Module::Build: 0.3601
+dynamic_config: 0
+generated_by: 'Dist::Zilla version 4.300028, CPAN::Meta::Converter version 2.120921'
+license: perl
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+name: Beam-Wire
+requires:
+  Moo: 0
+  MooX::Types::MooseLike: 0
+  YAML::Any: 0.84
+version: 0.001
