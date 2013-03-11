@@ -1,11 +1,10 @@
 package Beam::Wire;
 {
-  $Beam::Wire::VERSION = '0.002';
+  $Beam::Wire::VERSION = '0.003';
 }
 
 use strict;
 use warnings;
-use feature qw( switch );
 
 use Moo;
 use MooX::Types::MooseLike::Base qw( :all );
@@ -53,17 +52,15 @@ sub set {
 sub create_service {
     my ( $self, %service_info ) = @_;
     my @args;
-    given ( ref $service_info{args} ) {
-        when ( /ARRAY/ ) {
-            @args = @{$service_info{args}};
-        }
-        when ( /HASH/ ) {
-            @args = %{$service_info{args}};
-        }
-        default {
-            # Try anyway?
-            @args = $service_info{args};
-        }
+    if ( ref $service_info{args} eq 'ARRAY' ) {
+        @args = @{$service_info{args}};
+    }
+    elsif ( ref $service_info{args} eq 'HASH' ) {
+        @args = %{$service_info{args}};
+    }
+    else {
+        # Try anyway?
+        @args = $service_info{args};
     }
     # Subcontainers cannot scan for refs in their configs
     if ( $service_info{class}->isa( 'Beam::Wire' ) ) {
