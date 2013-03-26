@@ -20,12 +20,13 @@ my %module_build_args = (
     "Doug Bell <preaction\@cpan.org>"
   ],
   "dist_name" => "Beam-Wire",
-  "dist_version" => "0.004",
+  "dist_version" => "0.005",
   "license" => "perl",
   "module_name" => "Beam::Wire",
   "recommends" => {},
   "recursive_test_files" => 1,
   "requires" => {
+    "Module::Load" => 0,
     "Moo" => 0,
     "MooX::Types::MooseLike" => 0,
     "YAML::Any" => "0.84"

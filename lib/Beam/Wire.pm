@@ -1,11 +1,12 @@
 package Beam::Wire;
 {
-  $Beam::Wire::VERSION = '0.004';
+  $Beam::Wire::VERSION = '0.005';
 }
 
 use strict;
 use warnings;
 
+use Class::Load qw( load_class );
 use Moo;
 use MooX::Types::MooseLike::Base qw( :all );
 use YAML::Any qw( LoadFile );
@@ -95,6 +96,7 @@ sub parse_args {
 sub create_service {
     my ( $self, %service_info ) = @_;
     my @args = $self->parse_args( %service_info );
+    load_class( $service_info{class} );
     return $service_info{class}->new( @args );
 }
 

@@ -25,11 +25,12 @@ my %WriteMakefileArgs = (
   "LICENSE" => "perl",
   "NAME" => "Beam::Wire",
   "PREREQ_PM" => {
+    "Module::Load" => 0,
     "Moo" => 0,
     "MooX::Types::MooseLike" => 0,
     "YAML::Any" => "0.84"
   },
-  "VERSION" => "0.004",
+  "VERSION" => "0.005",
   "test" => {
     "TESTS" => "t/*.t"
   }

@@ -1,4 +1,5 @@
 Build.PL
+CHANGES
 LICENSE
 MANIFEST
 META.yml
@@ -11,4 +12,6 @@ t/file.yml
 t/inner.t
 t/inner_file.yml
 t/inner_inline.yml
+t/lib/Foo.pm
+t/load.t
 t/wire.t

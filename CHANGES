@@ -1,0 +1,106 @@
+==================================================
+Changes from 2012-03-26 00:00:00 +0000 to present.
+==================================================
+
+------------------------------------------
+version 0.005 at 2013-03-26 20:41:16 +0000
+------------------------------------------
+
+  Change: a2685b47941d2a9b3a7e6d2c9682e935be91b0f8
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2013-03-26 15:38:48 +0000
+
+    fix: load the class before trying to create the object 
+
+------------------------------------------
+version 0.004 at 2013-03-26 00:19:00 +0000
+------------------------------------------
+
+  Change: 811734e1d521a660ac6f1fc0e10d55ab6739c438
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2013-03-25 19:19:00 +0000
+
+    update README from pod 
+
+  Change: d2c6b302818dc571292cab4e92724934a0e9aa6b
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2013-03-25 19:18:37 +0000
+
+    refactor create_service for easier sub-classing 
+
+  Change: 972f79bd20df3ce10b985f174294861fd2135958
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2013-03-25 18:18:21 +0000
+
+    inner container files should be relative based on the parent
+    container dir 
+
+  Change: d6967c70a15e862fcce1a9dc3f8cc1116db473c0
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2013-03-25 18:13:03 +0000
+
+    rename "sub" containers to "inner" 
+
+------------------------------------------
+version 0.003 at 2013-03-11 03:57:09 +0000
+------------------------------------------
+
+  Change: f9ddd6fe60271c486da9ba304e07571f38af8685
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2013-03-10 22:57:09 +0000
+
+    remove given/when to work on 5.8.9 
+
+------------------------------------------
+version 0.002 at 2013-03-10 07:44:17 +0000
+------------------------------------------
+
+  Change: 78adef3977c7378539f9aa356f09f458eeb04b86
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2013-03-10 01:44:17 +0000
+
+    update README from POD 
+
+  Change: afba9df0c2a29d4e1d2947d169e480ec0c960159
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2013-03-10 01:43:52 +0000
+
+    test arrayref arguments and hashref arguments to increase coverage 
+
+  Change: 4bc24085c4eeb806a23ca400f968e3b17992c541
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2013-03-10 01:28:27 +0000
+
+    test service refs inside subcontainer 
+
+  Change: fa477abf0667178118fc831143cd6d8aed73b585
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2013-03-10 01:13:38 +0000
+
+    document subcontainers 
+
+  Change: 9078a8bb22d9551672b47633a9b63dcc88a890f5
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2013-03-10 00:59:08 +0000
+
+    add sub containers 
+
+------------------------------------------
+version 0.001 at 2013-03-10 00:55:49 +0000
+------------------------------------------
+
+  Change: f62ee90317b4a77d9e5708e383604a08c3327265
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2013-03-09 18:55:49 +0000
+
+    update README for github 
+
+  Change: b51653ea90973ae1ee141eeaa3eab67319a995d8
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2013-03-09 18:55:22 +0000
+
+    a basic dependency injection container 
+
+================
+End of releases.
+================
