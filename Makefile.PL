@@ -29,7 +29,7 @@ my %WriteMakefileArgs = (
     "MooX::Types::MooseLike" => 0,
     "YAML::Any" => "0.84"
   },
-  "VERSION" => "0.003",
+  "VERSION" => "0.004",
   "test" => {
     "TESTS" => "t/*.t"
   }

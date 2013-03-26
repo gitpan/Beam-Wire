@@ -1,6 +1,6 @@
 package Beam::Wire;
 {
-  $Beam::Wire::VERSION = '0.003';
+  $Beam::Wire::VERSION = '0.004';
 }
 
 use strict;
@@ -9,10 +9,21 @@ use warnings;
 use Moo;
 use MooX::Types::MooseLike::Base qw( :all );
 use YAML::Any qw( LoadFile );
+use File::Basename qw( dirname );
+use File::Spec::Functions qw( catfile );
 
 has file => (
     is      => 'ro',
     isa     => Str,
+);
+
+has dir => (
+    is      => 'ro',
+    isa     => Str,
+    lazy    => 1,
+    default => sub {
+        dirname $_[0]->file;
+    },
 );
 
 has config => (
@@ -49,7 +60,7 @@ sub set {
     $self->services->{$name} = $service;
 }
 
-sub create_service {
+sub parse_args {
     my ( $self, %service_info ) = @_;
     my @args;
     if ( ref $service_info{args} eq 'ARRAY' ) {
@@ -62,10 +73,14 @@ sub create_service {
         # Try anyway?
         @args = $service_info{args};
     }
-    # Subcontainers cannot scan for refs in their configs
     if ( $service_info{class}->isa( 'Beam::Wire' ) ) {
         my %args = @args;
+        # Subcontainers cannot scan for refs in their configs
         my $config = delete $args{config};
+        # Relative subcontainer files should be from the current container's directory
+        if ( exists $args{file} && $args{file} !~ m{^/} ) {
+            $args{file} = catfile( $self->dir, $args{file} );
+        }
         @args = $self->find_refs( %args );
         if ( $config ) {
             push @args, config => $config;
@@ -74,6 +89,12 @@ sub create_service {
     else {
         @args = $self->find_refs( @args );
     }
+    return @args;
+}
+
+sub create_service {
+    my ( $self, %service_info ) = @_;
+    my @args = $self->parse_args( %service_info );
     return $service_info{class}->new( @args );
 }
 
@@ -145,6 +166,19 @@ TODO: Explain what a DI container does and why you want it
 =head2 file
 
 Read the list of services from the given file. The file is described below in the L<FILE> section.
+
+=head2 dir
+
+A directory to use when searching for inner container files. Defaults to the directory that contains
+the C<file>.
+
+=head2 config
+
+A hashref of service configurations. This is normally filled in by reading the L<FILE>.
+
+=head2 services
+
+A hashref of services. If you have any services already built, add them here.
 
 =head1 METHODS
 
@@ -220,3 +254,36 @@ Inner containers' contents can be reached from outer containers by separating
 the names with a slash character:
 
     my $dbh = $wire->get( 'inner/dbh' );
+
+=head2 INNER FILES
+
+    inner:
+        class: Beam::Wire
+        args:
+            file: inner.yml
+
+Inner containers can be created by reading files just like the main container. If the 
+C<file> attribute is relative, the parent's C<dir> attribute will be added:
+
+    # share/parent.yml
+    inner:
+        class: Beam::Wire
+        args:
+            file: inner.yml
+
+    # share/inner.yml
+    dbh:
+        class: DBI
+        args:
+            - 'dbi:sqlite:data.db'
+
+    # myscript.pl
+    use Beam::Wire;
+    my $container = Beam::Wire->new(
+        file => 'share/parent.yml',
+    );
+    my $dbh = $container->get( 'inner/dbh' );
+
+If more control is needed, you can set the L<dir> attribute on the parent container.
+
+If even more control is needed, you can make a subclass of Beam::Wire.
