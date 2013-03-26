@@ -3,8 +3,24 @@ Changes from 2012-03-26 00:00:00 +0000 to present.
 ==================================================
 
 ------------------------------------------
-version 0.005 at 2013-03-26 20:41:16 +0000
+version 0.006 at 2013-03-26 21:17:30 +0000
 ------------------------------------------
+
+  Change: 837584aab5cbbbea25754026255bdc43b7cac0fa
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2013-03-26 16:01:11 +0000
+
+    silence a warning when there are no args to parse 
+
+------------------------------------------
+version 0.005 at 2013-03-26 20:41:27 +0000
+------------------------------------------
+
+  Change: 2364a246673d72299cb3c388fc723b7d16bd076a
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2013-03-26 15:41:27 +0000
+
+    v0.005 
 
   Change: a2685b47941d2a9b3a7e6d2c9682e935be91b0f8
   Author: Doug Bell <madcityzen@gmail.com>
