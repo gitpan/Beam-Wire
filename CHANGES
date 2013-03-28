@@ -1,9 +1,32 @@
 ==================================================
-Changes from 2012-03-26 00:00:00 +0000 to present.
+Changes from 2012-03-28 00:00:00 +0000 to present.
 ==================================================
 
 ------------------------------------------
-version 0.006 at 2013-03-26 21:17:30 +0000
+version 0.007 at 2013-03-28 05:11:08 +0000
+------------------------------------------
+
+  Change: e3e50112219b21f37b0231e7d3af0c1dd64d1561
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2013-03-28 00:10:49 +0000
+
+    add the test for method property 
+
+  Change: d6c770bcb64e2c6d2c1624e3619cbad29ae2ff00
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2013-03-28 00:10:30 +0000
+
+    update README from POD 
+
+  Change: 4ba32f76172525a2c76dac77c7eab0aa96f2ff9a
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2013-03-28 00:10:11 +0000
+
+    add "method" service property to allow for DBI->connect as a
+    constructor 
+
+------------------------------------------
+version 0.006 at 2013-03-26 21:01:11 +0000
 ------------------------------------------
 
   Change: 837584aab5cbbbea25754026255bdc43b7cac0fa

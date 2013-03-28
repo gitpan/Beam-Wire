@@ -21,4 +21,4 @@ requires:
   Moo: 0
   MooX::Types::MooseLike: 0
   YAML::Any: 0.84
-version: 0.006
+version: 0.007
