@@ -1,6 +1,6 @@
 package Beam::Wire;
 {
-  $Beam::Wire::VERSION = '0.007';
+  $Beam::Wire::VERSION = '0.008';
 }
 
 use strict;

@@ -17,8 +17,8 @@ meta-spec:
   version: 1.4
 name: Beam-Wire
 requires:
-  Module::Load: 0
+  Class::Load: 0
   Moo: 0
   MooX::Types::MooseLike: 0
   YAML::Any: 0.84
-version: 0.007
+version: 0.008
