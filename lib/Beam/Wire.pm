@@ -1,22 +1,31 @@
+# ABSTRACT: A Dependency Injection Container
+
 package Beam::Wire;
 {
-  $Beam::Wire::VERSION = '0.008';
+  $Beam::Wire::VERSION = '0.009';
 }
 
 use strict;
 use warnings;
 
-use Class::Load qw( load_class );
+# VERSION
+
 use Moo;
-use MooX::Types::MooseLike::Base qw( :all );
-use YAML::Any qw( LoadFile );
+use Config::Any;
+use Class::Load qw( load_class );
+use Data::DPath qw ( dpath );
 use File::Basename qw( dirname );
 use File::Spec::Functions qw( catfile );
+use MooX::Types::MooseLike::Base qw( :all );
+use YAML::Any qw( LoadFile );
+
+
 
 has file => (
     is      => 'ro',
     isa     => Str,
 );
+
 
 has dir => (
     is      => 'ro',
@@ -27,12 +36,22 @@ has dir => (
     },
 );
 
+
 has config => (
-    is          => 'ro',
-    isa         => HashRef,
-    lazy        => 1,
-    default     => sub { LoadFile( $_[0]->file ); },
+    is      => 'ro',
+    isa     => HashRef,
+    lazy    => 1,
+    builder => 1
 );
+
+sub _build_config {
+    my ( $self ) = @_; local $Config::Any::YAML::NO_YAML_XS_WARNING = 1;
+    my $loader = Config::Any->load_files( {
+        files  => [$self->file], use_ext => 1, flatten_to_hash => 1
+    } );
+    return "HASH" eq ref $loader ? (values(%{$loader}))[0] : {};
+}
+
 
 has services => (
     is      => 'ro',
@@ -40,17 +59,20 @@ has services => (
     default => sub { {} },
 );
 
+
 sub get {
     my ( $self, $name ) = @_;
     if ( $name =~ '/' ) {
         my ( $container_name, $service ) = split m{/}, $name, 2;
-        my $container = $self->services->{$container_name}
-                      ||= $self->create_service( %{ $self->config->{$container_name} } );
+        my $container = $self->services->{$container_name} ||=
+            $self->create_service( %{ $self->config->{$container_name} } )
+        ;
         return $container->get( $service );
     }
-    return $self->services->{$name} 
+    return $self->services->{$name}
         ||= $self->create_service( %{ $self->config->{$name} } );
 }
+
 
 sub set {
     my ( $self, $name, $service ) = @_;
@@ -79,7 +101,8 @@ sub parse_args {
         my %args = @args;
         # Subcontainers cannot scan for refs in their configs
         my $config = delete $args{config};
-        # Relative subcontainer files should be from the current container's directory
+        # Relative subcontainer files should be from the current
+        # container's directory
         if ( exists $args{file} && $args{file} !~ m{^/} ) {
             $args{file} = catfile( $self->dir, $args{file} );
         }
@@ -96,10 +119,32 @@ sub parse_args {
 
 sub create_service {
     my ( $self, %service_info ) = @_;
+    # Compose the parent ref into the copy, in case the parent changes
+    %service_info = $self->merge_config( %service_info );
     my @args = $self->parse_args( %service_info );
+    if ( $service_info{value} ) {
+        return $service_info{value};
+    }
     load_class( $service_info{class} );
     my $method = $service_info{method} || "new";
     return $service_info{class}->$method( @args );
+}
+
+sub merge_config {
+    my ( $self, %service_info ) = @_;
+    if ( $service_info{ extends } ) {
+        my %base_config = %{ $self->config->{ $service_info{extends} } };
+        # Merge the args separately, to be a bit nicer about hashes of arguments
+        my $args;
+        if ( ref $service_info{args} eq 'HASH' && ref $base_config{args} eq 'HASH' ) {
+            $args = { %{ delete $base_config{args} }, %{ delete $service_info{args} } };
+        }
+        %service_info = ( $self->merge_config( %base_config ), %service_info );
+        if ( $args ) {
+            $service_info{args} = $args;
+        }
+    }
+    return %service_info;
 }
 
 sub find_refs {
@@ -107,12 +152,31 @@ sub find_refs {
     my @out;
     for my $arg ( @args ) {
         if ( ref $arg eq 'HASH' ) {
-            # Detect references
+            # detect references
             my @keys = keys %$arg;
-            if ( @keys == 1 && $keys[0] eq 'ref' ) {
+            if ( @keys and $keys[0] eq 'ref' ) {
+                # resolve service ref
+                my @ref;
                 my $name = $arg->{ref};
-                # Found a ref!
-                push @out, $self->get( $name );
+                my $service = $self->get( $name );
+                # resolve service ref w/path
+                if ( $arg->{path} ) {
+                    # locate foreign service data
+                    my $conf = $self->config->{$name};
+                    @ref = dpath($arg->{path})->match($service);
+                }
+                elsif ( my $method = $arg->{method} ) {
+                    my @args = !$arg->{args}                ? ()
+                             : ref $arg->{args} eq 'ARRAY'  ? @{ $arg->{args} } 
+                             : $arg->{args};
+                    @ref = $service->$method( @args );
+                }
+                else {
+                    @ref = $service;
+                }
+
+                # return service(s)
+                push @out, @ref;
             }
             else {
                 push @out, { $self->find_refs( %$arg ) };
@@ -128,16 +192,25 @@ sub find_refs {
     return @out;
 }
 
+
 1;
+
 __END__
+
+=pod
 
 =head1 NAME
 
 Beam::Wire - A Dependency Injection Container
 
+=head1 VERSION
+
+version 0.009
+
 =head1 SYNOPSIS
 
     # wire.yml
+
     dbh:
         class: 'DBI'
         method: connect
@@ -146,72 +219,97 @@ Beam::Wire - A Dependency Injection Container
             - {
                 PrintError: 1
               }
-    cache:
-        class: 'CHI'
-        args:
-            driver: 'DBI'
-            dbh: { ref: 'dbh' }
 
     # myscript.pl
-    use Beam::Wire;
-    my $wire  = Beam::Wire->new( file => 'wire.yml' );
-    my $dbh   = $wire->get( 'dbh' );
-    my $cache = $wire->get( 'cache' );
 
-    $wire->set( 'dbh', DBI->new( 'dbi:pgsql:dbname' ) );
+    use Beam::Wire;
+
+    my $wire = Beam::Wire->new( file => 'wire.yml' );
+    my $dbh  = $wire->get( 'dbh' );
+               $wire->set( 'dbh' => DBI->new( 'dbi:pgsql:dbname' ) );
 
 =head1 DESCRIPTION
 
-Beam::Wire is a dependency injection container.
+Beam::Wire is a dependency injection (DI) container. A DI (dependency injection)
+container is a framework/mechanism where dependency creation and instantiation is
+handled automatically (e.g. creates instances of classes that implement a given
+dependency interface on request). DI does not require a container, in-fact, DI
+without a container is possible and simply infers that dependency creation isn't
+automatically handled for you (i.e. you have to write code to instantiate the
+dependencies manually).
 
-TODO: Explain what a DI container does and why you want it
+Dependency injection (DI) at it's core is about creating loosely coupled code by
+separating construction logic from application logic. This is done by pushing
+the creation of services (dependencies) to the entry point(s) and writing the
+application logic so that dependencies are provided for its components. The
+application logic doesn't know or care how it is supplied with its dependencies;
+it just requires them and therefore receives them.
 
-=head1 ATTRIBUTES
+=head1 OVERVIEW
 
-=head2 file
+Beam::Wire loads a configuration L<file> and stores the specified configuration
+in the L<config> attribute which is used to resolve it's services. This section
+will give you an overview of how to declare dependencies and services, and shape
+your configuration file.
 
-Read the list of services from the given file. The file is described below in the L<FILE> section.
+=head2 WHAT IS A DEPENDENCY?
 
-=head2 dir
+A dependency is a declaration of a component requirement. In layman's terms, a
+dependency is a class attribute (or any value required for class construction)
+which will likely be used to define services.
 
-A directory to use when searching for inner container files. Defaults to the directory that contains
-the C<file>.
+=head2 WHAT IS A SERVICE?
 
-=head2 config
+A service is a resolvable interface which may be selected and implemented on
+behalf of a dependent component, or instantiated and returned per request. In
+layman's terms, a service is a class configuration which can be used
+independently or as a dependent of other services.
 
-A hashref of service configurations. This is normally filled in by reading the L<FILE>.
+=head2 HOW ARE SERVICES CONFIGURED?
 
-=head2 services
+    # databases.yml
 
-A hashref of services. If you have any services already built, add them here.
+    production_db:
+        class: 'DBI'
+        method: connect
+        args:
+            - 'dbi:mysql:master'
+            - { PrintError: 0, RaiseError: 0 }
+    production_cache:
+        class: 'CHI'
+        args:
+            driver: 'DBI'
+            dbh: { ref: 'production_db' }
+    development_db:
+        class: 'DBI'
+        method: connect
+        args:
+            - 'dbi:mysql:slave'
+            - { PrintError: 1, RaiseError: 1 }
+    development_cache:
+        class: 'CHI'
+        args:
+            driver: 'DBI'
+            dbh: { ref: 'development_db' }
 
-=head1 METHODS
+=head3 Service Attributes
 
-=head2 new
+=head4 class
 
-Create a new container.
+The class to instantiate. The class will be loaded and the C<method> (below)
+method called.
 
-=head1 FILE
-
-Beam::Wire can read a YAML file to fill a container with services. The file should be a single hashref.
-The keys will be the service names.
-
-=head1 SERVICE ATTRIBUTES
-
-=head2 class
-
-The class to instantiate. The class will be loaded and the C<method> (below) method called.
-
-=head2 method
+=head4 method
 
 The class method to call to construct the object. Defaults to C<new>.
 
-=head2 args
+=head4 args
 
-The arguments to the C<method> method. This can be either an array or a hash, like so:
+The arguments to the C<method> method. This can be either an array or a hash,
+like so:
 
     # array
-    dbh: 
+    dbh:
         class: DBI
         method: connect
         args:
@@ -235,14 +333,45 @@ Using the array of arguments, you can give arrayrefs or hashrefs:
                 - [ 'Bar', 'Foosmith' ]
                 - [ 'Baz', 'Bazleton' ]
 
-    # hashref
+    # arrayrefs of hashrefs
     cache:
         class: CHI
         args:
             -   driver: Memory
                 max_size: 16MB
 
-=head1 INNER CONTAINERS
+=head4 extends
+
+Inherit and override attributes from another service. 
+
+    dbh:
+        class: DBI
+        method: connect
+        args:
+            - 'dbi:mysql:dbname'
+    dbh_dev:
+        extends: 'dbh'
+        args:
+            - 'dbi:mysql:devdb'
+
+Hash C<args> will be merged seperately, like so:
+
+    activemq:
+        class: My::ActiveMQ
+        args:
+            host: example.com
+            port: 61312
+            user: root
+            password: 12345
+    activemq_dev:
+        extends: 'activemq'
+        args:
+            host: dev.example.com
+
+C<activemq_dev> will get the C<port>, C<user>, and C<password> arguments
+from the base service C<activemq>.
+
+=head3 Inner Containers
 
 Beam::Wire objects can hold other Beam::Wire objects!
 
@@ -266,15 +395,16 @@ the names with a slash character:
 
     my $dbh = $wire->get( 'inner/dbh' );
 
-=head2 INNER FILES
+=head3 Inner Files
 
     inner:
         class: Beam::Wire
         args:
             file: inner.yml
 
-Inner containers can be created by reading files just like the main container. If the 
-C<file> attribute is relative, the parent's C<dir> attribute will be added:
+Inner containers can be created by reading files just like the main container.
+If the C<file> attribute is relative, the parent's C<dir> attribute will be
+added:
 
     # share/parent.yml
     inner:
@@ -291,11 +421,105 @@ C<file> attribute is relative, the parent's C<dir> attribute will be added:
 
     # myscript.pl
     use Beam::Wire;
+
     my $container = Beam::Wire->new(
         file => 'share/parent.yml',
     );
+
     my $dbh = $container->get( 'inner/dbh' );
 
-If more control is needed, you can set the L<dir> attribute on the parent container.
+If more control is needed, you can set the L<dir> attribute on the parent
+container. If even more control is needed, you can make a subclass of Beam::Wire.
 
-If even more control is needed, you can make a subclass of Beam::Wire.
+=head3 Service/Configuration References
+
+    chi:
+        class: CHI
+        args:
+            driver: 'DBI'
+            dbh: { ref: 'dbh' }
+    dbh:
+        class: DBI
+        method: connect
+        args:
+            - { ref: dsn }
+            - { ref: usr }
+            - { ref: pwd }
+    dsn:
+        value: "dbi:SQLite:memory:"
+    usr:
+        value: "admin"
+    pwd:
+        value: "s3cret"
+
+The reuse of service and configuration containers as arguments for other
+services is encouraged so we have provided a means of referencing those
+objects within your configuration. A reference is an arugment (a service
+argument) in the form of a hashref with a C<ref> key whose value is
+the name of another service. Optionally, this hashref may contain a C<path>
+key whose value is a L<Data::DPath> search string which should return the found
+data structure from within the referenced service.
+
+It is also possible to use raw-values as services, this is done by configuring a
+service using a single key/value pair with a C<value> key whose value contains
+the raw-value you wish to reuse.
+
+=head1 ATTRIBUTES
+
+=head2 file
+
+The file attribute contains the file path of the file where Beam::Wire container
+services are configured (typically a YAML file). The file's contents should form
+a single hashref. The keys will become the service names.
+
+=head2 dir
+
+The dir attribute contains the directory path to use when searching for inner
+container files. Defaults to the directory which contains the file specified by
+the L<file> attribute.
+
+=head2 config
+
+The config attribute contains a hashref of service configurations. This data is
+loaded by L<Config::Any> using the file specified by the L<file> attribute.
+
+=head2 services
+
+A hashref of services. If you have any services already built, add them here.
+
+=head1 METHODS
+
+=head2 get
+
+The get method resolves and returns the specified service.
+
+=head2 set
+
+The set method configures and stores the specified service.
+
+=head2 new
+
+Create a new container.
+
+=head1 AUTHORS
+
+=over 4
+
+=item *
+
+Doug Bell <preaction@cpan.org>
+
+=item *
+
+Al Newkirk <anewkirk@ana.io>
+
+=back
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2013 by Doug Bell.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=cut

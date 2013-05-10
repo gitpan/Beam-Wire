@@ -1,9 +1,105 @@
 ==================================================
-Changes from 2012-03-30 00:00:00 +0000 to present.
+Changes from 2012-05-10 00:00:00 +0000 to present.
 ==================================================
 
 ------------------------------------------
-version 0.008 at 2013-03-30 02:51:10 +0000
+version 0.009 at 2013-05-10 02:39:48 +0000
+------------------------------------------
+
+  Change: 8ed60d31ace9723b41083c5c67006a41f7206e7c
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2013-05-09 21:39:26 +0000
+
+    Release v0.009 
+
+  Change: fd3fadd6078c3061641e29d2abd4c76885390e70
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2013-05-09 21:38:53 +0000
+
+    add docs on 'extends' attribute 
+
+  Change: e5d7ee888c9118a4d30361a6494334c74e4e2ae2
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2013-05-09 21:12:38 +0000
+
+    add "extends" for services to inherit properties from other services 
+
+  Change: 249c149d457828fce19b634e8d51b9cfa6c5d224
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2013-05-09 21:11:43 +0000
+
+    move Greeting test class into its own file 
+
+  Change: e5a7888b2d0dbc4a20d12790f15dd874b4b2270f
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2013-05-09 19:54:54 +0000
+
+    too many layers of subtest 
+
+  Change: 9b3b4d8f247eda131b5d613864576a1810b99831
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2013-05-09 19:29:52 +0000
+
+    allow methods to be called while referencing a service 
+
+  Change: 83dabd45696438f0abfb7f450da42c08776caf13
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2013-05-09 19:27:52 +0000
+
+    Test the "args are a non-ref scalar" case 
+
+  Change: 7dc46922b2e9f4efa9e7c13414613b127c0fd720
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2013-05-09 18:51:17 +0000
+
+    allow value services to be retrieved via get() 
+
+  Change: 4aee9bf483339a267d5cc9ed4a07caf3db3a2fbd
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2013-04-15 12:56:48 +0000
+
+    Merge pull request #7 from alnewkirk/master
+
+    Updated Dist and POD 
+
+  Change: 51f1129d82e46ce7d41e65464ca3e8ca2ba1c073
+  Author: Al Newkirk <anewkirk@ana.io>
+  Date : 2013-04-14 10:10:26 +0000
+
+    updated POD and readme 
+
+  Change: 10e3f4a15a7f9256985e46824eab1a55a88ce6b7
+  Author: Al Newkirk <anewkirk@ana.io>
+  Date : 2013-04-14 10:09:20 +0000
+
+    added support for raw-value services 
+
+  Change: 32d8b8e60309664859288c3e61209801ad0dc882
+  Author: Al Newkirk <anewkirk@ana.io>
+  Date : 2013-04-13 11:10:47 +0000
+
+    added test with inlone packages 
+
+  Change: b9d6e7d24b0cd79e620fb3d33ab761b2cf8c8cbe
+  Author: Al Newkirk <anewkirk@ana.io>
+  Date : 2013-04-13 04:43:45 +0000
+
+    allow deep references of data structures 
+
+  Change: 6ff8af66ce13a755a796d14af5eebb0eb00b7e96
+  Author: Al Newkirk <anewkirk@ana.io>
+  Date : 2013-04-13 03:51:23 +0000
+
+    loads config files using Config::Any 
+
+  Change: d2f910176fd5d39daaa7e519d3e33800e48029c4
+  Author: Al Newkirk <anewkirk@ana.io>
+  Date : 2013-04-12 22:04:48 +0000
+
+    reformatted distribution and added additional POD 
+
+------------------------------------------
+version 0.008 at 2013-03-30 02:50:46 +0000
 ------------------------------------------
 
   Change: 65a03c49e7bc10d55b2453f4d2fcde41cbbd7b42

@@ -17,16 +17,19 @@ my %module_build_args = (
   },
   "dist_abstract" => "A Dependency Injection Container",
   "dist_author" => [
-    "Doug Bell <preaction\@cpan.org>"
+    "Doug Bell <preaction\@cpan.org>",
+    "Al Newkirk <anewkirk\@ana.io>"
   ],
   "dist_name" => "Beam-Wire",
-  "dist_version" => "0.008",
+  "dist_version" => "0.009",
   "license" => "perl",
   "module_name" => "Beam::Wire",
   "recommends" => {},
   "recursive_test_files" => 1,
   "requires" => {
     "Class::Load" => 0,
+    "Config::Any" => "0.23",
+    "Data::DPath" => "0.49",
     "Moo" => 0,
     "MooX::Types::MooseLike" => 0,
     "YAML::Any" => "0.84"

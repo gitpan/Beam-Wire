@@ -10,7 +10,7 @@ use ExtUtils::MakeMaker 6.30;
 
 my %WriteMakefileArgs = (
   "ABSTRACT" => "A Dependency Injection Container",
-  "AUTHOR" => "Doug Bell <preaction\@cpan.org>",
+  "AUTHOR" => "Doug Bell <preaction\@cpan.org>, Al Newkirk <anewkirk\@ana.io>",
   "BUILD_REQUIRES" => {
     "Module::Build" => "0.3601",
     "Test::Compile" => 0,
@@ -26,11 +26,13 @@ my %WriteMakefileArgs = (
   "NAME" => "Beam::Wire",
   "PREREQ_PM" => {
     "Class::Load" => 0,
+    "Config::Any" => "0.23",
+    "Data::DPath" => "0.49",
     "Moo" => 0,
     "MooX::Types::MooseLike" => 0,
     "YAML::Any" => "0.84"
   },
-  "VERSION" => "0.008",
+  "VERSION" => "0.009",
   "test" => {
     "TESTS" => "t/*.t"
   }

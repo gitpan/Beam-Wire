@@ -2,6 +2,7 @@
 abstract: 'A Dependency Injection Container'
 author:
   - 'Doug Bell <preaction@cpan.org>'
+  - 'Al Newkirk <anewkirk@ana.io>'
 build_requires:
   Module::Build: 0.3601
   Test::Compile: 0
@@ -18,7 +19,13 @@ meta-spec:
 name: Beam-Wire
 requires:
   Class::Load: 0
+  Config::Any: 0.23
+  Data::DPath: 0.49
   Moo: 0
   MooX::Types::MooseLike: 0
   YAML::Any: 0.84
-version: 0.008
+resources:
+  bugtracker: https://github.com/preaction/Beam-Wire/issues
+  homepage: https://github.com/preaction/Beam-Wire
+  repository: https://github.com/preaction/Beam-Wire.git
+version: 0.009
