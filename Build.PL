@@ -7,9 +7,11 @@ use Module::Build 0.3601;
 
 my %module_build_args = (
   "build_requires" => {
+    "JSON" => 0,
     "Module::Build" => "0.3601",
     "Test::Compile" => 0,
-    "Test::Most" => 0
+    "Test::Most" => 0,
+    "YAML" => 0
   },
   "configure_requires" => {
     "ExtUtils::MakeMaker" => "6.30",
@@ -21,7 +23,7 @@ my %module_build_args = (
     "Al Newkirk <anewkirk\@ana.io>"
   ],
   "dist_name" => "Beam-Wire",
-  "dist_version" => "0.009",
+  "dist_version" => "0.010",
   "license" => "perl",
   "module_name" => "Beam::Wire",
   "recommends" => {},
@@ -31,8 +33,7 @@ my %module_build_args = (
     "Config::Any" => "0.23",
     "Data::DPath" => "0.49",
     "Moo" => 0,
-    "MooX::Types::MooseLike" => 0,
-    "YAML::Any" => "0.84"
+    "MooX::Types::MooseLike" => 0
   },
   "script_files" => []
 );

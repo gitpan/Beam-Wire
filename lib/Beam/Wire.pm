@@ -2,7 +2,7 @@
 
 package Beam::Wire;
 {
-  $Beam::Wire::VERSION = '0.009';
+  $Beam::Wire::VERSION = '0.010';
 }
 
 use strict;
@@ -205,7 +205,7 @@ Beam::Wire - A Dependency Injection Container
 
 =head1 VERSION
 
-version 0.009
+version 0.010
 
 =head1 SYNOPSIS
 

@@ -1,9 +1,31 @@
 ==================================================
-Changes from 2012-05-10 00:00:00 +0000 to present.
+Changes from 2012-05-19 00:00:00 +0000 to present.
 ==================================================
 
 ------------------------------------------
-version 0.009 at 2013-05-10 02:39:48 +0000
+version 0.010 at 2013-05-19 03:41:48 +0000
+------------------------------------------
+
+  Change: 7af39c0cab06b1bbe6651190d60a816879411e78
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2013-05-18 22:41:39 +0000
+
+    Release v0.010 
+
+  Change: 71290f31f30da6428f1c7c22470a870dfa74a309
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2013-05-18 22:40:43 +0000
+
+    add Build.PL to the files captured and moved to the repository root 
+
+  Change: 75950a084eda9d7d80b06b3867debce4a947b6dc
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2013-05-18 22:39:32 +0000
+
+    add test dependency on JSON and YAML 
+
+------------------------------------------
+version 0.009 at 2013-05-10 02:39:26 +0000
 ------------------------------------------
 
   Change: 8ed60d31ace9723b41083c5c67006a41f7206e7c
