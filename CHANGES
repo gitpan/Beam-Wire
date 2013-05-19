@@ -3,7 +3,23 @@ Changes from 2012-05-19 00:00:00 +0000 to present.
 ==================================================
 
 ------------------------------------------
-version 0.011 at 2013-05-19 03:50:47 +0000
+version 0.012 at 2013-05-19 18:24:01 +0000
+------------------------------------------
+
+  Change: 1b30500b64d01b2253873b060950157b75fca9d9
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2013-05-19 13:23:51 +0000
+
+    Release v0.012 
+
+  Change: e81488b011bea2536349e50e1a62dd13e72a7da7
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2013-05-19 13:23:27 +0000
+
+    add some better diagnostics for CPANTESTERS 
+
+------------------------------------------
+version 0.011 at 2013-05-19 03:50:37 +0000
 ------------------------------------------
 
   Change: b99b93fcbb25db38fd9c73572734b8603c9fb2b4
