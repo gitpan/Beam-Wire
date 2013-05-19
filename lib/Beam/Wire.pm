@@ -2,7 +2,7 @@
 
 package Beam::Wire;
 {
-  $Beam::Wire::VERSION = '0.010';
+  $Beam::Wire::VERSION = '0.011';
 }
 
 use strict;
@@ -17,7 +17,6 @@ use Data::DPath qw ( dpath );
 use File::Basename qw( dirname );
 use File::Spec::Functions qw( catfile );
 use MooX::Types::MooseLike::Base qw( :all );
-use YAML::Any qw( LoadFile );
 
 
 
@@ -205,7 +204,7 @@ Beam::Wire - A Dependency Injection Container
 
 =head1 VERSION
 
-version 0.010
+version 0.011
 
 =head1 SYNOPSIS
 
