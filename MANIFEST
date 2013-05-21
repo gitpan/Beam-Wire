@@ -19,6 +19,7 @@ t/inner_file.yml
 t/inner_inline.yml
 t/lib/Foo.pm
 t/lib/Greeting.pm
+t/lifecycle.t
 t/load.t
 t/method.t
 t/method_ref.t
