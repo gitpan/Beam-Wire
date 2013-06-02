@@ -1,9 +1,38 @@
 ==================================================
-Changes from 2012-05-21 00:00:00 +0000 to present.
+Changes from 2012-06-02 00:00:00 +0000 to present.
 ==================================================
 
 ------------------------------------------
-version 0.013 at 2013-05-21 19:42:27 +0000
+version 0.014 at 2013-06-02 20:37:21 +0000
+------------------------------------------
+
+  Change: 36032c1ffd07f233f36aa1e0af5a4bb5ea1a46c2
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2013-06-02 15:37:10 +0000
+
+    Release v0.014 
+
+  Change: f20c85e46d2af567a9f71731f1b26c65981beb8c
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2013-06-02 15:30:48 +0000
+
+    don't rely on hash ordering to detect references 
+
+  Change: 54cd99b9063b733a6656cc9bfbaeff08f04e96a5
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2013-06-02 15:17:00 +0000
+
+    add meta prefix to avoid potential collisions with existing data
+    structures 
+
+  Change: 0f92cd313a5784d81a776614f60d4b99f4b130c8
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2013-05-29 23:14:29 +0000
+
+    add get() overrides to create anonymous services 
+
+------------------------------------------
+version 0.013 at 2013-05-21 19:42:16 +0000
 ------------------------------------------
 
   Change: 0ba357baa76e102ed4e95cba5111b41385b8ad81

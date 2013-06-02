@@ -14,6 +14,7 @@ t/extends.t
 t/file.json
 t/file.pl
 t/file.yml
+t/get.t
 t/inner.t
 t/inner_file.yml
 t/inner_inline.yml
@@ -25,4 +26,3 @@ t/method.t
 t/method_ref.t
 t/onefile.t
 t/rawvalues.t
-t/wire.t
