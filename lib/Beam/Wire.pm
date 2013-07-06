@@ -2,7 +2,7 @@
 
 package Beam::Wire;
 {
-  $Beam::Wire::VERSION = '0.014';
+  $Beam::Wire::VERSION = '0.015';
 }
 
 use strict;
@@ -45,7 +45,9 @@ has config => (
 );
 
 sub _build_config {
-    my ( $self ) = @_; local $Config::Any::YAML::NO_YAML_XS_WARNING = 1;
+    my ( $self ) = @_;
+    return {} if ( !$self->file );
+    local $Config::Any::YAML::NO_YAML_XS_WARNING = 1;
     my $loader = Config::Any->load_files( {
         files  => [$self->file], use_ext => 1, flatten_to_hash => 1
     } );
@@ -56,8 +58,15 @@ sub _build_config {
 has services => (
     is      => 'ro',
     isa     => HashRef,
-    default => sub { {} },
+    lazy    => 1,
+    builder => 1,
 );
+
+sub _build_services {
+    my ( $self ) = @_;
+    my $services = {};
+    return $services;
+}
 
 
 has meta_prefix => (
@@ -83,7 +92,7 @@ sub get {
     if ( !$service ) {
         my %config  = %{ $self->config->{$name} };
         $service = $self->create_service( %config );
-        if ( !$config{lifecycle} || lc $config{lifecycle} eq 'singleton' ) {
+        if ( !$config{lifecycle} || lc $config{lifecycle} ne 'factory' ) {
             $self->services->{$name} = $service;
         }
     }
@@ -218,6 +227,17 @@ sub find_refs {
 }
 
 
+sub BUILD {
+    my ( $self ) = @_;
+    # Create all the eager services
+    for my $key ( keys %{ $self->config } ) {
+        my $config = $self->config->{$key};
+        if ( $config->{lifecycle} && $config->{lifecycle} eq 'eager' ) {
+            $self->get($key);
+        }
+    }
+}
+
 1;
 
 __END__
@@ -230,7 +250,7 @@ Beam::Wire - A Dependency Injection Container
 
 =head1 VERSION
 
-version 0.014
+version 0.015
 
 =head1 SYNOPSIS
 
@@ -421,6 +441,10 @@ C<DateTime->add> modifies the object and returns the newly-modified object (to
 allow for method chaining.) Without C<lifecycle: factory>, the C<today> service
 would become yesterday, making it hard to know what C<report_today> would
 report on.
+
+An C<eager> value will be created as soon as the container is created. If you
+have an object that registers itself upon instantiation, you can make sure your
+object is created as soon as possible by doing C<lifecycle: eager>.
 
 =head3 Inner Containers
 

@@ -1,9 +1,25 @@
 ==================================================
-Changes from 2012-06-02 00:00:00 +0000 to present.
+Changes from 2012-07-06 00:00:00 +0000 to present.
 ==================================================
 
 ------------------------------------------
-version 0.014 at 2013-06-02 20:37:21 +0000
+version 0.015 at 2013-07-06 01:37:11 +0000
+------------------------------------------
+
+  Change: 52209fe50842a639fbe957e076f50366cc85fdbf
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2013-07-05 20:35:27 +0000
+
+    do not build a config from file if there is no file 
+
+  Change: 0514f507ba198e10e91580a05f62568ad150d771
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2013-07-05 20:33:26 +0000
+
+    add "eager" services that get created when container is instanciated 
+
+------------------------------------------
+version 0.014 at 2013-06-02 20:37:10 +0000
 ------------------------------------------
 
   Change: 36032c1ffd07f233f36aa1e0af5a4bb5ea1a46c2
