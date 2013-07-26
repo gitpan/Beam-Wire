@@ -19,7 +19,7 @@ my %module_build_args = (
     "Al Newkirk <anewkirk\@ana.io>"
   ],
   "dist_name" => "Beam-Wire",
-  "dist_version" => "0.015",
+  "dist_version" => "0.016",
   "license" => "perl",
   "module_name" => "Beam::Wire",
   "recommends" => {},
@@ -36,6 +36,7 @@ my %module_build_args = (
   "test_requires" => {
     "JSON" => 0,
     "Test::Compile" => 0,
+    "Test::Lib" => 0,
     "Test::Most" => 0,
     "YAML" => 0
   }

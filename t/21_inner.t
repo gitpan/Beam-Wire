@@ -4,9 +4,9 @@ use FindBin qw( $Bin );
 use File::Spec::Functions qw( catfile );
 use Scalar::Util qw( refaddr );
 
-my $SINGLE_FILE = catfile( $Bin, 'file.yml' );
-my $DEEP_FILE   = catfile( $Bin, 'inner_inline.yml' );
-my $INNER_FILE  = catfile( $Bin, 'inner_file.yml' );
+my $SINGLE_FILE = catfile( $Bin, 'share', 'file.yml' );
+my $DEEP_FILE   = catfile( $Bin, 'share', 'inner_inline.yml' );
+my $INNER_FILE  = catfile( $Bin, 'share', 'inner_file.yml' );
 
 use Beam::Wire;
 
@@ -102,11 +102,11 @@ subtest 'inner container get() overrides' => sub {
         file => $INNER_FILE,
     );
 
-	my $foo = $wire->get( 'container/foo' );
-	my $oof = $wire->get( 'container/foo', args => { bar => Bar->new( text => 'New World' ) } );
-	isnt refaddr $oof, refaddr $foo, 'get() with overrides creates a new object';
-	isnt refaddr $oof, refaddr $wire->get('container/foo'), 'get() with overrides does not save the object';
-	isnt refaddr $oof->bar, refaddr $foo->bar, 'our override gave our new object a new bar';
+    my $foo = $wire->get( 'container/foo' );
+    my $oof = $wire->get( 'container/foo', args => { bar => Bar->new( text => 'New World' ) } );
+    isnt refaddr $oof, refaddr $foo, 'get() with overrides creates a new object';
+    isnt refaddr $oof, refaddr $wire->get('container/foo'), 'get() with overrides does not save the object';
+    isnt refaddr $oof->bar, refaddr $foo->bar, 'our override gave our new object a new bar';
 };
 
 

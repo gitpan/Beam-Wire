@@ -2,7 +2,7 @@
 
 package Beam::Wire;
 {
-  $Beam::Wire::VERSION = '0.015';
+  $Beam::Wire::VERSION = '0.016';
 }
 
 use strict;
@@ -110,20 +110,20 @@ sub set {
 }
 
 sub parse_args {
-    my ( $self, %service_info ) = @_;
-    return if not exists $service_info{args};
+    my ( $self, $class, $args ) = @_;
+    return if not $args;
     my @args;
-    if ( ref $service_info{args} eq 'ARRAY' ) {
-        @args = @{$service_info{args}};
+    if ( ref $args eq 'ARRAY' ) {
+        @args = @$args;
     }
-    elsif ( ref $service_info{args} eq 'HASH' ) {
-        @args = %{$service_info{args}};
+    elsif ( ref $args eq 'HASH' ) {
+        @args = %$args;
     }
     else {
         # Try anyway?
-        @args = $service_info{args};
+        @args = $args;
     }
-    if ( $service_info{class}->isa( 'Beam::Wire' ) ) {
+    if ( $class->isa( 'Beam::Wire' ) ) {
         my %args = @args;
         # Subcontainers cannot scan for refs in their configs
         my $config = delete $args{config};
@@ -147,13 +147,29 @@ sub create_service {
     my ( $self, %service_info ) = @_;
     # Compose the parent ref into the copy, in case the parent changes
     %service_info = $self->merge_config( %service_info );
-    my @args = $self->parse_args( %service_info );
     if ( $service_info{value} ) {
         return $service_info{value};
     }
     load_class( $service_info{class} );
     my $method = $service_info{method} || "new";
-    return $service_info{class}->$method( @args );
+    my $service;
+    if ( ref $method eq 'ARRAY' ) {
+        for my $m ( @$method ) {
+            my $method = $m->{method};
+            my $return = $m->{return} || '';
+            delete $service_info{args};
+            my @args = $self->parse_args( $service_info{class}, $m->{args} );
+            my $invocant = $service || $service_info{class};
+            my $output = $invocant->$method( @args );
+            $service = !$service || $return eq 'chain' ? $output
+                     : $service;
+        }
+    }
+    else {
+        my @args = $self->parse_args( @service_info{"class","args"} );
+        $service = $service_info{class}->$method( @args );
+    }
+    return $service;
 }
 
 sub merge_config {
@@ -176,41 +192,23 @@ sub merge_config {
 sub find_refs {
     my ( $self, @args ) = @_;
     my @out;
-    my $prefix = $self->meta_prefix;
-    my %meta = (
-        ref     => "${prefix}ref",
-        path    => "${prefix}path",
-        method  => "${prefix}method",
-        args    => "${prefix}args",
-    );
+    my %meta = $self->get_meta_names;
     for my $arg ( @args ) {
         if ( ref $arg eq 'HASH' ) {
-            # detect references
-            my @keys = keys %$arg;
-            if ( $arg->{ $meta{ref} } and all { /^\Q$prefix/ } @keys ) {
-                # resolve service ref
-                my @ref;
-                my $name = $arg->{ $meta{ref} };
-                my $service = $self->get( $name );
-                # resolve service ref w/path
-                if ( my $path = $arg->{ $meta{path} } ) {
-                    # locate foreign service data
-                    my $conf = $self->config->{$name};
-                    @ref = dpath( $path )->match($service);
+            if ( $self->is_meta( $arg ) ) {
+                if ( $arg->{ $meta{ ref } } ) {
+                    push @out, $self->resolve_ref( $arg );
                 }
-                elsif ( my $method = $arg->{ $meta{method} } ) {
-                    my $args = $arg->{ $meta{args} };
-                    my @args = !$args                ? ()
-                             : ref $args eq 'ARRAY'  ? @{ $args }
-                             : $args;
-                    @ref = $service->$method( @args );
+                else { # Try to treat it as a service to create
+                    my %service_info;
+                    my $prefix = $self->meta_prefix;
+                    for my $arg_key ( keys %$arg ) {
+                        my $info_key = $arg_key;
+                        $info_key =~ s/^\Q$prefix//;
+                        $service_info{ $info_key } = $arg->{ $arg_key };
+                    }
+                    push @out, $self->create_service( %service_info );
                 }
-                else {
-                    @ref = $service;
-                }
-
-                # return service(s)
-                push @out, @ref;
             }
             else {
                 push @out, { $self->find_refs( %$arg ) };
@@ -225,6 +223,54 @@ sub find_refs {
     }
     return @out;
 }
+
+sub is_meta {
+    my ( $self, $arg ) = @_;
+    my $prefix = $self->meta_prefix;
+    return all { /^\Q$prefix/ } keys %$arg;
+}
+
+sub get_meta_names {
+    my ( $self ) = @_;
+    my $prefix = $self->meta_prefix;
+    my %meta = (
+        ref     => "${prefix}ref",
+        path    => "${prefix}path",
+        method  => "${prefix}method",
+        args    => "${prefix}args",
+        class   => "${prefix}class",
+    );
+    return wantarray ? %meta : \%meta;
+}
+
+sub resolve_ref {
+    my ( $self, $arg ) = @_;
+
+    my %meta = $self->get_meta_names;
+
+    my @ref;
+    my $name = $arg->{ $meta{ref} };
+    my $service = $self->get( $name );
+    # resolve service ref w/path
+    if ( my $path = $arg->{ $meta{path} } ) {
+        # locate foreign service data
+        my $conf = $self->config->{$name};
+        @ref = dpath( $path )->match($service);
+    }
+    elsif ( my $method = $arg->{ $meta{method} } ) {
+        my $args = $arg->{ $meta{args} };
+        my @args = !$args                ? ()
+                 : ref $args eq 'ARRAY'  ? @{ $args }
+                 : $args;
+        @ref = $service->$method( @args );
+    }
+    else {
+        @ref = $service;
+    }
+
+    return @ref;
+}
+
 
 
 sub BUILD {
@@ -250,7 +296,7 @@ Beam::Wire - A Dependency Injection Container
 
 =head1 VERSION
 
-version 0.015
+version 0.016
 
 =head1 SYNOPSIS
 
@@ -347,6 +393,45 @@ method called.
 =head4 method
 
 The class method to call to construct the object. Defaults to C<new>.
+
+If multiple methods are needed to initialize an object, C<method> can be an
+arrayref of hashrefs, like so:
+
+    my_service:
+        class: My::Service
+        method:
+            - method: new
+              args:
+                foo: bar
+            - method: set_baz
+              args:
+                - Fizz
+
+In this example, first we call C<My::Service->new( foo => "bar" );> to get our
+object, then we call C<$obj->set_baz( "Fizz" );> as a further initialization
+step.
+
+To chain methods together, add C<return: chain>:
+
+    my_service:
+        class: My::Service
+        method:
+            - method: new
+              args:
+                foo: bar
+            - method: set_baz
+              return: chain
+              args:
+                - Fizz
+            - method: set_buzz
+              return: chain
+              args:
+                - Bork
+
+This example is equivalent to the following code:
+
+    my $service = My::Service->new( foo => "bar" )->set_baz( "Fizz" )
+                ->set_buzz( "Bork" );
 
 =head4 args
 

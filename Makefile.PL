@@ -33,10 +33,11 @@ my %WriteMakefileArgs = (
   "TEST_REQUIRES" => {
     "JSON" => 0,
     "Test::Compile" => 0,
+    "Test::Lib" => 0,
     "Test::Most" => 0,
     "YAML" => 0
   },
-  "VERSION" => "0.015",
+  "VERSION" => "0.016",
   "test" => {
     "TESTS" => "t/*.t"
   }
