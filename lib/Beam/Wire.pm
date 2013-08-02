@@ -2,7 +2,7 @@
 
 package Beam::Wire;
 {
-  $Beam::Wire::VERSION = '0.016';
+  $Beam::Wire::VERSION = '1.000';
 }
 
 use strict;
@@ -80,18 +80,20 @@ sub get {
     my ( $self, $name, %override ) = @_;
     if ( $name =~ '/' ) {
         my ( $container_name, $service ) = split m{/}, $name, 2;
-        my $container = $self->services->{$container_name} ||=
-            $self->create_service( %{ $self->config->{$container_name} } )
-        ;
-        return $container->get( $service, %override );
+        return $self->get( $container_name )->get( $service, %override );
     }
     if ( keys %override ) {
-        return $self->create_service( %override, extends => $name );
+        return $self->create_service( "\$anonymous extends $name", %override, extends => $name );
     }
     my $service = $self->services->{$name};
     if ( !$service ) {
-        my %config  = %{ $self->config->{$name} };
-        $service = $self->create_service( %config );
+        my $config_ref = $self->get_config($name);
+        Beam::Wire::Exception::NotFound->throw(
+            name => $name,
+            file => $self->file,
+        ) unless $config_ref;
+        my %config  = %{ $config_ref };
+        $service = $self->create_service( $name, %config );
         if ( !$config{lifecycle} || lc $config{lifecycle} ne 'factory' ) {
             $self->services->{$name} = $service;
         }
@@ -107,6 +109,48 @@ sub set {
         return $self->get( $container_name )->set( $service_name, $service );
     }
     $self->services->{$name} = $service;
+}
+
+
+sub get_config {
+    my ( $self, $name ) = @_;
+    if ( $name =~ '/' ) {
+        my ( $container_name, $service ) = split m{/}, $name, 2;
+        my $inner_config = $self->get( $container_name )->get_config( $service );
+        # Fix relative references to prefix the container name
+        return { $self->fix_refs( $container_name, %$inner_config ) };
+    }
+    return $self->config->{$name};
+}
+
+# TODO: Refactor fix_refs and find_refs into an iterator
+sub fix_refs {
+    my ( $self, $container_name, @args ) = @_;
+    my @out;
+    my %meta = $self->get_meta_names;
+    for my $arg ( @args ) {
+        if ( ref $arg eq 'HASH' ) {
+            if ( $self->is_meta( $arg ) ) {
+                my %new = ();
+                for my $key ( @meta{qw( ref extends )} ) {
+                    if ( $arg->{$key} ) {
+                        $new{ $key } = join( "/", $container_name, $arg->{$key} );
+                    }
+                }
+                push @out, \%new;
+            }
+            else {
+                push @out, { $self->fix_refs( $container_name, %$arg ) };
+            }
+        }
+        elsif ( ref $arg eq 'ARRAY' ) {
+            push @out, [ map { $self->fix_refs( $container_name, $_ ) } @$arg ];
+        }
+        else {
+            push @out, $arg; # simple scalars
+        }
+    }
+    return @out;
 }
 
 sub parse_args {
@@ -144,9 +188,20 @@ sub parse_args {
 }
 
 sub create_service {
-    my ( $self, %service_info ) = @_;
+    my ( $self, $name, %service_info ) = @_;
     # Compose the parent ref into the copy, in case the parent changes
     %service_info = $self->merge_config( %service_info );
+    # value and class/extends are mutually exclusive
+    # must check after merge_config in case parent config has class/value
+    if ( exists $service_info{value} && (
+            exists $service_info{class} || exists $service_info{extends}
+        )
+    ) {
+        Beam::Wire::Exception::InvalidConfig->throw(
+            name => $name,
+            file => $self->file,
+        );
+    }
     if ( $service_info{value} ) {
         return $service_info{value};
     }
@@ -175,7 +230,12 @@ sub create_service {
 sub merge_config {
     my ( $self, %service_info ) = @_;
     if ( $service_info{ extends } ) {
-        my %base_config = %{ $self->config->{ $service_info{extends} } };
+        my $base_config_ref = $self->get_config( $service_info{extends} );
+        Beam::Wire::Exception::NotFound->throw(
+            name => $service_info{extends},
+            file => $self->file,
+        ) unless $base_config_ref;
+        my %base_config = %$base_config_ref;
         # Merge the args separately, to be a bit nicer about hashes of arguments
         my $args;
         if ( ref $service_info{args} eq 'HASH' && ref $base_config{args} eq 'HASH' ) {
@@ -207,7 +267,7 @@ sub find_refs {
                         $info_key =~ s/^\Q$prefix//;
                         $service_info{ $info_key } = $arg->{ $arg_key };
                     }
-                    push @out, $self->create_service( %service_info );
+                    push @out, $self->create_service( '$anonymous', %service_info );
                 }
             }
             else {
@@ -239,6 +299,7 @@ sub get_meta_names {
         method  => "${prefix}method",
         args    => "${prefix}args",
         class   => "${prefix}class",
+        extends => "${prefix}extends",
     );
     return wantarray ? %meta : \%meta;
 }
@@ -254,7 +315,7 @@ sub resolve_ref {
     # resolve service ref w/path
     if ( my $path = $arg->{ $meta{path} } ) {
         # locate foreign service data
-        my $conf = $self->config->{$name};
+        my $conf = $self->get_config($name);
         @ref = dpath( $path )->match($service);
     }
     elsif ( my $method = $arg->{ $meta{method} } ) {
@@ -284,6 +345,50 @@ sub BUILD {
     }
 }
 
+
+package Beam::Wire::Exception;
+{
+  $Beam::Wire::Exception::VERSION = '1.000';
+}
+use Moo;
+with 'Throwable';
+
+
+package Beam::Wire::Exception::Service;
+{
+  $Beam::Wire::Exception::Service::VERSION = '1.000';
+}
+use Moo;
+use MooX::Types::MooseLike::Base qw( :all );
+extends 'Beam::Wire::Exception';
+
+has name => (
+    is          => 'ro',
+    isa         => Str,
+    required    => 1,
+);
+
+has file => (
+    is          => 'ro',
+    isa         => Maybe[Str],
+);
+
+
+package Beam::Wire::Exception::NotFound;
+{
+  $Beam::Wire::Exception::NotFound::VERSION = '1.000';
+}
+use Moo;
+extends 'Beam::Wire::Exception::Service';
+
+
+package Beam::Wire::Exception::InvalidConfig;
+{
+  $Beam::Wire::Exception::InvalidConfig::VERSION = '1.000';
+}
+use Moo;
+extends 'Beam::Wire::Exception::Service';
+
 1;
 
 __END__
@@ -296,7 +401,7 @@ Beam::Wire - A Dependency Injection Container
 
 =head1 VERSION
 
-version 0.016
+version 1.000
 
 =head1 SYNOPSIS
 
@@ -685,9 +790,43 @@ configuration at run-time.
 
 The set method configures and stores the specified service.
 
+=head2 get_config
+
+Get the config with the given name, searching inner containers if required
+
 =head2 new
 
 Create a new container.
+
+=head1 EXCEPTIONS
+
+If there is an error internal to Beam::Wire, an exception will be thrown. If there is an
+error with creating a service or calling a method, the exception thrown will be passed-
+through unaltered.
+
+=head2 Beam::Wire::Exception
+
+The base exception class
+
+=head2 Beam::Wire::Exception::Service
+
+An exception with service information inside
+
+=head2 Beam::Wire::Exception::NotFound
+
+The requested service or configuration was not found.
+
+=head2 Beam::Wire::Exception::InvalidConfig
+
+The configuration is invalid:
+
+=over 4
+
+=item *
+
+Both "value" and "class" or "extends" are defined. These are mutually-exclusive.
+
+=back
 
 =head1 AUTHORS
 

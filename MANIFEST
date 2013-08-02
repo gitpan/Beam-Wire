@@ -8,6 +8,7 @@ README
 README.mkdn
 lib/Beam/Wire.pm
 t/00_compile.t
+t/01_exception.t
 t/10_service.t
 t/11_extends.t
 t/12_method.t

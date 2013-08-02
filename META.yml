@@ -27,8 +27,9 @@ requires:
   List::MoreUtils: 0
   Moo: 0
   MooX::Types::MooseLike: 0
+  Throwable: 0
 resources:
   bugtracker: https://github.com/preaction/Beam-Wire/issues
   homepage: https://github.com/preaction/Beam-Wire
   repository: https://github.com/preaction/Beam-Wire.git
-version: 0.016
+version: 1.000

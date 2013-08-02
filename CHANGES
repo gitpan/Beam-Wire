@@ -1,9 +1,49 @@
 ==================================================
-Changes from 2012-07-26 00:00:00 +0000 to present.
+Changes from 2012-08-02 00:00:00 +0000 to present.
 ==================================================
 
 ------------------------------------------
-version 0.016 at 2013-07-26 12:59:36 +0000
+version 1.000 at 2013-08-02 19:53:22 +0000
+------------------------------------------
+
+  Change: 298f49206ac573dbe845f986a459340a9401c6d9
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2013-08-02 14:53:11 +0000
+
+    release v1.000 
+
+  Change: ee911a26fcbda5a6a0ba9cbc04c2c0daa13176c5
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2013-08-02 14:50:36 +0000
+
+    add exceptions using Throwable 
+
+  Change: dfefad9ba7354048559bdb4c99e5336c2f79e01e
+  Author: Doug Bell <doug.bell@baml.com>
+  Date : 2013-08-01 15:08:26 +0000
+
+    ignore build artifacts 
+
+  Change: 3d1c888e76f88419ff5024c38405b4d76c31cfd9
+  Author: Doug Bell <doug.bell@baml.com>
+  Date : 2013-07-30 17:47:46 +0000
+
+    fix #28: Cannot extend service from inner container 
+
+  Change: aec043c8bf0318574772335b32716a326a26884c
+  Author: Doug Bell <doug.bell@baml.com>
+  Date : 2013-07-26 12:21:46 +0000
+
+    add error message when service not found 
+
+  Change: b1b66f493d2542f09b25e6130111426aaa4f078b
+  Author: Doug Bell <doug.bell@baml.com>
+  Date : 2013-07-26 12:12:17 +0000
+
+    add error message when service extends service that does not exist 
+
+------------------------------------------
+version 0.016 at 2013-07-26 12:59:19 +0000
 ------------------------------------------
 
   Change: bfd2935ad2ec14dca3d63495161bc90ec355fac6
