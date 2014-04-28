@@ -1,9 +1,39 @@
 ==================================================
-Changes from 2012-08-02 00:00:00 +0000 to present.
+Changes from 2013-04-28 00:00:00 +0000 to present.
 ==================================================
 
 ------------------------------------------
-version 1.000 at 2013-08-02 19:53:22 +0000
+version 1.001 at 2014-04-28 04:13:53 +0000
+------------------------------------------
+
+  Change: 241a4aacb73580b9a1f54e442d9e72a94ca541d7
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2014-04-27 23:13:42 +0000
+
+    add contributing docs 
+
+  Change: e29f5112dab624a62288e278b43b9c6686e0507f
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2014-04-27 23:13:26 +0000
+
+    update build artifacts 
+
+  Change: b4483536b32ee3f24042e75bde0af0ae968b8bc4
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2014-04-27 21:46:52 +0000
+
+    fix "Cannot modify private array" in test
+
+    This doesn't appear to be an issue on all versions of Perl 
+
+  Change: cda44f20fb20482ac8c26886e986f9c4cfbe96b8
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2014-03-30 00:43:25 +0000
+
+    changes suggested by my brand-new Perl::Critic configuration 
+
+------------------------------------------
+version 1.000 at 2013-08-02 19:53:11 +0000
 ------------------------------------------
 
   Change: 298f49206ac573dbe845f986a459340a9401c6d9
@@ -312,154 +342,6 @@ version 0.009 at 2013-05-10 02:39:26 +0000
 
     reformatted distribution and added additional POD 
 
-------------------------------------------
-version 0.008 at 2013-03-30 02:50:46 +0000
-------------------------------------------
-
-  Change: 65a03c49e7bc10d55b2453f4d2fcde41cbbd7b42
-  Author: Doug Bell <madcityzen@gmail.com>
-  Date : 2013-03-29 21:50:46 +0000
-
-    fix: specified the wrong dependency 
-
-------------------------------------------
-version 0.007 at 2013-03-28 05:10:49 +0000
-------------------------------------------
-
-  Change: e3e50112219b21f37b0231e7d3af0c1dd64d1561
-  Author: Doug Bell <madcityzen@gmail.com>
-  Date : 2013-03-28 00:10:49 +0000
-
-    add the test for method property 
-
-  Change: d6c770bcb64e2c6d2c1624e3619cbad29ae2ff00
-  Author: Doug Bell <madcityzen@gmail.com>
-  Date : 2013-03-28 00:10:30 +0000
-
-    update README from POD 
-
-  Change: 4ba32f76172525a2c76dac77c7eab0aa96f2ff9a
-  Author: Doug Bell <madcityzen@gmail.com>
-  Date : 2013-03-28 00:10:11 +0000
-
-    add "method" service property to allow for DBI->connect as a
-    constructor 
-
-------------------------------------------
-version 0.006 at 2013-03-26 21:01:11 +0000
-------------------------------------------
-
-  Change: 837584aab5cbbbea25754026255bdc43b7cac0fa
-  Author: Doug Bell <madcityzen@gmail.com>
-  Date : 2013-03-26 16:01:11 +0000
-
-    silence a warning when there are no args to parse 
-
-------------------------------------------
-version 0.005 at 2013-03-26 20:41:27 +0000
-------------------------------------------
-
-  Change: 2364a246673d72299cb3c388fc723b7d16bd076a
-  Author: Doug Bell <madcityzen@gmail.com>
-  Date : 2013-03-26 15:41:27 +0000
-
-    v0.005 
-
-  Change: a2685b47941d2a9b3a7e6d2c9682e935be91b0f8
-  Author: Doug Bell <madcityzen@gmail.com>
-  Date : 2013-03-26 15:38:48 +0000
-
-    fix: load the class before trying to create the object 
-
-------------------------------------------
-version 0.004 at 2013-03-26 00:19:00 +0000
-------------------------------------------
-
-  Change: 811734e1d521a660ac6f1fc0e10d55ab6739c438
-  Author: Doug Bell <madcityzen@gmail.com>
-  Date : 2013-03-25 19:19:00 +0000
-
-    update README from pod 
-
-  Change: d2c6b302818dc571292cab4e92724934a0e9aa6b
-  Author: Doug Bell <madcityzen@gmail.com>
-  Date : 2013-03-25 19:18:37 +0000
-
-    refactor create_service for easier sub-classing 
-
-  Change: 972f79bd20df3ce10b985f174294861fd2135958
-  Author: Doug Bell <madcityzen@gmail.com>
-  Date : 2013-03-25 18:18:21 +0000
-
-    inner container files should be relative based on the parent
-    container dir 
-
-  Change: d6967c70a15e862fcce1a9dc3f8cc1116db473c0
-  Author: Doug Bell <madcityzen@gmail.com>
-  Date : 2013-03-25 18:13:03 +0000
-
-    rename "sub" containers to "inner" 
-
-------------------------------------------
-version 0.003 at 2013-03-11 03:57:09 +0000
-------------------------------------------
-
-  Change: f9ddd6fe60271c486da9ba304e07571f38af8685
-  Author: Doug Bell <madcityzen@gmail.com>
-  Date : 2013-03-10 22:57:09 +0000
-
-    remove given/when to work on 5.8.9 
-
-------------------------------------------
-version 0.002 at 2013-03-10 07:44:17 +0000
-------------------------------------------
-
-  Change: 78adef3977c7378539f9aa356f09f458eeb04b86
-  Author: Doug Bell <madcityzen@gmail.com>
-  Date : 2013-03-10 01:44:17 +0000
-
-    update README from POD 
-
-  Change: afba9df0c2a29d4e1d2947d169e480ec0c960159
-  Author: Doug Bell <madcityzen@gmail.com>
-  Date : 2013-03-10 01:43:52 +0000
-
-    test arrayref arguments and hashref arguments to increase coverage 
-
-  Change: 4bc24085c4eeb806a23ca400f968e3b17992c541
-  Author: Doug Bell <madcityzen@gmail.com>
-  Date : 2013-03-10 01:28:27 +0000
-
-    test service refs inside subcontainer 
-
-  Change: fa477abf0667178118fc831143cd6d8aed73b585
-  Author: Doug Bell <madcityzen@gmail.com>
-  Date : 2013-03-10 01:13:38 +0000
-
-    document subcontainers 
-
-  Change: 9078a8bb22d9551672b47633a9b63dcc88a890f5
-  Author: Doug Bell <madcityzen@gmail.com>
-  Date : 2013-03-10 00:59:08 +0000
-
-    add sub containers 
-
-------------------------------------------
-version 0.001 at 2013-03-10 00:55:49 +0000
-------------------------------------------
-
-  Change: f62ee90317b4a77d9e5708e383604a08c3327265
-  Author: Doug Bell <madcityzen@gmail.com>
-  Date : 2013-03-09 18:55:49 +0000
-
-    update README for github 
-
-  Change: b51653ea90973ae1ee141eeaa3eab67319a995d8
-  Author: Doug Bell <madcityzen@gmail.com>
-  Date : 2013-03-09 18:55:22 +0000
-
-    a basic dependency injection container 
-
-================
-End of releases.
-================
+================================================
+Plus 8 releases after 2013-04-28 00:00:00 +0000.
+================================================
