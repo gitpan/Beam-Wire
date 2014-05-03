@@ -2,7 +2,7 @@
 
 package Beam::Wire;
 {
-  $Beam::Wire::VERSION = '1.001';
+  $Beam::Wire::VERSION = '1.002';
 }
 
 use strict;
@@ -15,7 +15,7 @@ use Config::Any;
 use Class::Load qw( load_class );
 use Data::DPath qw ( dpath );
 use File::Basename qw( dirname );
-use File::Spec::Functions qw( catfile );
+use File::Spec::Functions qw( splitpath catfile );
 use MooX::Types::MooseLike::Base qw( :all );
 use List::MoreUtils qw( all );
 
@@ -32,7 +32,8 @@ has dir => (
     isa     => Str,
     lazy    => 1,
     default => sub {
-        dirname $_[0]->file;
+        my ( $volume, $path, $file ) = splitpath( $_[0]->file );
+        return join "", $volume, $path;
     },
 );
 
@@ -356,7 +357,7 @@ sub BUILD {
 
 package Beam::Wire::Exception;
 {
-  $Beam::Wire::Exception::VERSION = '1.001';
+  $Beam::Wire::Exception::VERSION = '1.002';
 }
 use Moo;
 with 'Throwable';
@@ -364,7 +365,7 @@ with 'Throwable';
 
 package Beam::Wire::Exception::Service;
 {
-  $Beam::Wire::Exception::Service::VERSION = '1.001';
+  $Beam::Wire::Exception::Service::VERSION = '1.002';
 }
 use Moo;
 use MooX::Types::MooseLike::Base qw( :all );
@@ -384,7 +385,7 @@ has file => (
 
 package Beam::Wire::Exception::NotFound;
 {
-  $Beam::Wire::Exception::NotFound::VERSION = '1.001';
+  $Beam::Wire::Exception::NotFound::VERSION = '1.002';
 }
 use Moo;
 extends 'Beam::Wire::Exception::Service';
@@ -392,7 +393,7 @@ extends 'Beam::Wire::Exception::Service';
 
 package Beam::Wire::Exception::InvalidConfig;
 {
-  $Beam::Wire::Exception::InvalidConfig::VERSION = '1.001';
+  $Beam::Wire::Exception::InvalidConfig::VERSION = '1.002';
 }
 use Moo;
 extends 'Beam::Wire::Exception::Service';
@@ -409,7 +410,7 @@ Beam::Wire - A Dependency Injection Container
 
 =head1 VERSION
 
-version 1.001
+version 1.002
 
 =head1 SYNOPSIS
 

@@ -1,9 +1,37 @@
 ==================================================
-Changes from 2013-04-28 00:00:00 +0000 to present.
+Changes from 2013-05-03 00:00:00 +0000 to present.
 ==================================================
 
 ------------------------------------------
-version 1.001 at 2014-04-28 04:13:53 +0000
+version 1.002 at 2014-05-03 03:45:09 +0000
+------------------------------------------
+
+  Change: e87fa2c453242d4ae803adc6706caa7c369363db
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2014-05-02 22:44:57 +0000
+
+    update build artifacts 
+
+  Change: f1e8321bee522a49fc62b97e40d1d9a690e8d217
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2014-05-02 22:43:27 +0000
+
+    use splitpath instead of dirname
+
+    This is to try to fix a windows error, since I can't seem to create
+    an actual working build toolchain on Windows.
+
+    The error is:
+
+    fileparse(): need a valid pathname at
+
+    C:\strawberry5143\cpan\build\Beam-Wire-1.001-TQXaqw\blib\lib/Beam/Wir
+    e.pm
+
+    line 35. 
+
+------------------------------------------
+version 1.001 at 2014-04-28 04:13:42 +0000
 ------------------------------------------
 
   Change: 241a4aacb73580b9a1f54e442d9e72a94ca541d7
@@ -343,5 +371,5 @@ version 0.009 at 2013-05-10 02:39:26 +0000
     reformatted distribution and added additional POD 
 
 ================================================
-Plus 8 releases after 2013-04-28 00:00:00 +0000.
+Plus 8 releases after 2013-05-03 00:00:00 +0000.
 ================================================
