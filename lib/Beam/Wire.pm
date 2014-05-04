@@ -2,7 +2,7 @@
 
 package Beam::Wire;
 {
-  $Beam::Wire::VERSION = '1.002';
+  $Beam::Wire::VERSION = '1.003';
 }
 
 use strict;
@@ -15,7 +15,7 @@ use Config::Any;
 use Class::Load qw( load_class );
 use Data::DPath qw ( dpath );
 use File::Basename qw( dirname );
-use File::Spec::Functions qw( splitpath catfile );
+use File::Spec::Functions qw( splitpath catfile file_name_is_absolute );
 use MooX::Types::MooseLike::Base qw( :all );
 use List::MoreUtils qw( all );
 
@@ -179,7 +179,7 @@ sub parse_args {
         my $config = delete $args{config};
         # Relative subcontainer files should be from the current
         # container's directory
-        if ( exists $args{file} && $args{file} !~ m{^/} ) {
+        if ( exists $args{file} && !file_name_is_absolute( $args{file} ) ) {
             $args{file} = catfile( $self->dir, $args{file} );
         }
         @args = $self->find_refs( %args );
@@ -357,7 +357,7 @@ sub BUILD {
 
 package Beam::Wire::Exception;
 {
-  $Beam::Wire::Exception::VERSION = '1.002';
+  $Beam::Wire::Exception::VERSION = '1.003';
 }
 use Moo;
 with 'Throwable';
@@ -365,7 +365,7 @@ with 'Throwable';
 
 package Beam::Wire::Exception::Service;
 {
-  $Beam::Wire::Exception::Service::VERSION = '1.002';
+  $Beam::Wire::Exception::Service::VERSION = '1.003';
 }
 use Moo;
 use MooX::Types::MooseLike::Base qw( :all );
@@ -385,7 +385,7 @@ has file => (
 
 package Beam::Wire::Exception::NotFound;
 {
-  $Beam::Wire::Exception::NotFound::VERSION = '1.002';
+  $Beam::Wire::Exception::NotFound::VERSION = '1.003';
 }
 use Moo;
 extends 'Beam::Wire::Exception::Service';
@@ -393,7 +393,7 @@ extends 'Beam::Wire::Exception::Service';
 
 package Beam::Wire::Exception::InvalidConfig;
 {
-  $Beam::Wire::Exception::InvalidConfig::VERSION = '1.002';
+  $Beam::Wire::Exception::InvalidConfig::VERSION = '1.003';
 }
 use Moo;
 extends 'Beam::Wire::Exception::Service';
@@ -410,7 +410,7 @@ Beam::Wire - A Dependency Injection Container
 
 =head1 VERSION
 
-version 1.002
+version 1.003
 
 =head1 SYNOPSIS
 

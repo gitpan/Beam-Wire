@@ -1,9 +1,23 @@
 ==================================================
-Changes from 2013-05-03 00:00:00 +0000 to present.
+Changes from 2013-05-04 00:00:00 +0000 to present.
 ==================================================
 
 ------------------------------------------
-version 1.002 at 2014-05-03 03:45:09 +0000
+version 1.003 at 2014-05-04 08:27:56 +0000
+------------------------------------------
+
+  Change: 4c14ec879cccd4c7e1ef1343219122cec5fa8571
+  Author: Doug Bell <madcityzen@gmail.com>
+  Date : 2014-05-04 03:26:50 +0000
+
+    fix incorrect absolute paths on windows
+
+    The path being created was \\C:\\foo\\bar\\baz.yml. Checking for a
+    unix-style / at the start is not the correct way to determine if a
+    file path is absolute. 
+
+------------------------------------------
+version 1.002 at 2014-05-03 03:44:57 +0000
 ------------------------------------------
 
   Change: e87fa2c453242d4ae803adc6706caa7c369363db
@@ -371,5 +385,5 @@ version 0.009 at 2013-05-10 02:39:26 +0000
     reformatted distribution and added additional POD 
 
 ================================================
-Plus 8 releases after 2013-05-03 00:00:00 +0000.
+Plus 8 releases after 2013-05-04 00:00:00 +0000.
 ================================================
