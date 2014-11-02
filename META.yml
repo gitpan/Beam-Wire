@@ -4,32 +4,36 @@ author:
   - 'Doug Bell <preaction@cpan.org>'
   - 'Al Newkirk <anewkirk@ana.io>'
 build_requires:
-  JSON: 0
-  Module::Build: 0.3601
-  Test::Compile: 0
-  Test::Lib: 0
-  Test::Most: 0
-  YAML: 0
+  JSON: '0'
+  Module::Build: '0.28'
+  Test::Compile: '0'
+  Test::Deep: '0'
+  Test::Differences: '0'
+  Test::Exception: '0'
+  Test::Lib: '0'
+  Test::More: '0'
+  YAML: '0'
 configure_requires:
-  ExtUtils::MakeMaker: 6.30
-  Module::Build: 0.3601
+  ExtUtils::MakeMaker: '0'
+  Module::Build: '0.28'
 dynamic_config: 0
-generated_by: 'Dist::Zilla version 4.300035, CPAN::Meta::Converter version 2.131560'
+generated_by: 'Dist::Zilla version 5.020, CPAN::Meta::Converter version 2.140640'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
-  version: 1.4
+  version: '1.4'
 name: Beam-Wire
 requires:
-  Class::Load: 0
-  Config::Any: 0.23
-  Data::DPath: 0.49
-  List::MoreUtils: 0
-  Moo: 0
-  MooX::Types::MooseLike: 0
-  Throwable: 0
+  Class::Load: '0'
+  Config::Any: '0.23'
+  Data::DPath: '0.49'
+  List::MoreUtils: '0'
+  Moo: '0'
+  MooX::Types::MooseLike: '0'
+  Throwable: '0'
 resources:
   bugtracker: https://github.com/preaction/Beam-Wire/issues
   homepage: https://github.com/preaction/Beam-Wire
   repository: https://github.com/preaction/Beam-Wire.git
-version: 1.003
+version: '1.004'
+x_authority: cpan:PREACTION
