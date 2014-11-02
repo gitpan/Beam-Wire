@@ -1,6 +1,10 @@
 Changelog for Beam-Wire
 
-1.006 2014-11-02T23:03:32
+1.007 2014-11-02T23:07:27
+ - do not allow dist.ini to be dirty
+ - those debug sections of dist.ini did not work
+
+1.006 2014-11-02T23:01:55
  - set up debug sections for easier DZ debugging
  - add debug sections to dist.ini
  - try to build the CHANGES file at the right time
