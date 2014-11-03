@@ -1,5 +1,5 @@
 ---
-abstract: 'A Dependency Injection Container'
+abstract: 'Lightweight Dependency Injection Container'
 author:
   - 'Doug Bell <preaction@cpan.org>'
   - 'Al Newkirk <anewkirk@ana.io>'
@@ -35,5 +35,5 @@ resources:
   bugtracker: https://github.com/preaction/Beam-Wire/issues
   homepage: https://github.com/preaction/Beam-Wire
   repository: https://github.com/preaction/Beam-Wire.git
-version: '1.008'
+version: '1.009'
 x_authority: cpan:PREACTION

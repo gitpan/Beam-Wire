@@ -1,6 +1,6 @@
 package Beam::Wire;
-# ABSTRACT: A Dependency Injection Container
-$Beam::Wire::VERSION = '1.008';
+# ABSTRACT: Lightweight Dependency Injection Container
+$Beam::Wire::VERSION = '1.009';
 use strict;
 use warnings;
 
@@ -350,13 +350,13 @@ sub BUILD {
 
 
 package Beam::Wire::Exception;
-$Beam::Wire::Exception::VERSION = '1.008';
+$Beam::Wire::Exception::VERSION = '1.009';
 use Moo;
 with 'Throwable';
 
 
 package Beam::Wire::Exception::Service;
-$Beam::Wire::Exception::Service::VERSION = '1.008';
+$Beam::Wire::Exception::Service::VERSION = '1.009';
 use Moo;
 use MooX::Types::MooseLike::Base qw( :all );
 extends 'Beam::Wire::Exception';
@@ -374,13 +374,13 @@ has file => (
 
 
 package Beam::Wire::Exception::NotFound;
-$Beam::Wire::Exception::NotFound::VERSION = '1.008';
+$Beam::Wire::Exception::NotFound::VERSION = '1.009';
 use Moo;
 extends 'Beam::Wire::Exception::Service';
 
 
 package Beam::Wire::Exception::InvalidConfig;
-$Beam::Wire::Exception::InvalidConfig::VERSION = '1.008';
+$Beam::Wire::Exception::InvalidConfig::VERSION = '1.009';
 use Moo;
 extends 'Beam::Wire::Exception::Service';
 
@@ -392,11 +392,11 @@ __END__
 
 =head1 NAME
 
-Beam::Wire - A Dependency Injection Container
+Beam::Wire - Lightweight Dependency Injection Container
 
 =head1 VERSION
 
-version 1.008
+version 1.009
 
 =head1 SYNOPSIS
 
